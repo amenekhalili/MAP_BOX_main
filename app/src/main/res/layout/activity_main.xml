@@ -12,7 +12,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/edittext_search"
-       />
+        mapbox:mapbox_cameraTargetLat="32.427908"
+        mapbox:mapbox_cameraTargetLng="53.688046"
+
+        mapbox:mapbox_cameraZoom="12"
+       >
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/recyclerView_search_location"/>
+           </com.mapbox.mapboxsdk.maps.MapView>
 
 
     <EditText
