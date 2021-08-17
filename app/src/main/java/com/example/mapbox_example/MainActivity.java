@@ -54,37 +54,38 @@ public class MainActivity extends AppCompatActivity implements
     private MapView mapView;
     private MapboxMap map;
     private PermissionsManager mPermissionsManager;
-    private LocationEngine mLocationEngine;
+
     private EditText editText_search;
     String query;
     MapboxGeocoding mapboxGeocoding;
     Button btn_Geo;
-    List<CarmenFeature> results;
+
     private RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
+       Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
         setContentView(R.layout.activity_main);
         btn_Geo = findViewById(R.id.geoCode_btn);
         mRecyclerView = findViewById(R.id.recyclerView_search_location);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+       mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         editText_search = findViewById(R.id.edittext_search);
-        mapView = findViewById(R.id.mapView);
-        mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(this);
+       mapView = findViewById(R.id.mapView);
+       mapView.onCreate(savedInstanceState);
+       mapView.getMapAsync(this);
 
     }
-
 
     private void setUpAdapter(List<CarmenFeature> response) {
 
         List<Location> mLocation = new ArrayList<>();
 
         for (int i = 0; i < response.size(); i++) {
-            Point resultPoint = results.get(i).center();
-            Location location = new Location(resultPoint.toString(), resultPoint.latitude(), resultPoint.longitude());
+
+
+            Location location = new Location(response.get(i).placeName()+response.get(i).address(),
+                    response.get(i).center().latitude(), response.get(i).center().longitude());
             mLocation.add(location);
         }
 
@@ -113,6 +114,18 @@ public class MainActivity extends AppCompatActivity implements
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(MainActivity.this, "you click to choose a location", Toast.LENGTH_SHORT).show();
+
+                    CameraPosition position = new CameraPosition.Builder()
+                            .target(new LatLng(mLocation.getLat() , mLocation.getLon()))
+                            .zoom(10)
+                            .tilt(20)
+                            .build();
+
+                    map.animateCamera(CameraUpdateFactory.newCameraPosition(position));
+                    MarkerOptions options = new MarkerOptions();
+                    options.title("selected location");
+                    options.position(new LatLng(location.getLat() , location.getLon()));
+                    map.addMarker(options);
                 }
             });
 
@@ -217,7 +230,7 @@ public class MainActivity extends AppCompatActivity implements
             public void onStyleLoaded(Style style) {
                 enableLocationComponent(style);
 
-                geoCode(mapboxMap);
+               geoCode(mapboxMap);
             }
         });
 
@@ -262,7 +275,7 @@ public class MainActivity extends AppCompatActivity implements
                 mapboxGeocoding.enqueueCall(new Callback<GeocodingResponse>() {
                     @Override
                     public void onResponse(Call<GeocodingResponse> call, Response<GeocodingResponse> response) {
-                        results = response.body().features();
+                        List<CarmenFeature> results = response.body().features();
                         if (results.size() > 0) {
                             // Log the first results Point.
                             for (int i = 0; i < results.size(); i++) {
@@ -270,12 +283,15 @@ public class MainActivity extends AppCompatActivity implements
                                 Log.d(TAG, "onResponse: " + firstResultPoint.latitude() + "****" + firstResultPoint.longitude());
                                 Toast.makeText(MainActivity.this, firstResultPoint.latitude() +
                                         "       ////       " + firstResultPoint.longitude(), Toast.LENGTH_LONG).show();
-                                AddMarker(firstResultPoint, mapboxMap);
+                                //AddMarker(firstResultPoint, mapboxMap);
 
-                                animateCamera(firstResultPoint, mapboxMap);
-                                setUpAdapter(results);
+                             //   ANI_CAMERA(firstResultPoint, mapboxMap);
+
 
                             }
+
+                            setUpAdapter(results);
+
                         } else {
 
                             // No result for your request were found.
@@ -302,7 +318,7 @@ public class MainActivity extends AppCompatActivity implements
         mapboxMap.addMarker(options);
     }
 
-    private void animateCamera(Point firstResultPoint, MapboxMap mapboxMap) {
+    public void ANI_CAMERA(Point firstResultPoint, MapboxMap mapboxMap) {
         CameraPosition position = new CameraPosition.Builder()
                 .target(new LatLng(firstResultPoint.latitude(), firstResultPoint.longitude()))
                 .zoom(10)

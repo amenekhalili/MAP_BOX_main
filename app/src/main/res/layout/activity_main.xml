@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools">
 
-
     <com.mapbox.mapboxsdk.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
@@ -14,7 +13,6 @@
         android:layout_below="@+id/edittext_search"
         mapbox:mapbox_cameraTargetLat="32.427908"
         mapbox:mapbox_cameraTargetLng="53.688046"
-
         mapbox:mapbox_cameraZoom="12"
        >
 
