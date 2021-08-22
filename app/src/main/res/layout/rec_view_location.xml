@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="30dp"
     android:id="@+id/btn_location"
-    android:background="#DD94EA">
+    android:background="#DD94EA"
+android:layout_margin="4dp">
 
 
 </Button>
