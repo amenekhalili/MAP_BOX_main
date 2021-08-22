@@ -314,6 +314,9 @@ public class MainActivity extends AppCompatActivity implements
                                 .backgroundColor(Color.parseColor("#EEEEEE"))
                                 .limit(10)
                                 .country("IR")
+                                .bbox(43.673647326134784,23.253854760103223,65.21172669473009,40.257577132816834)
+                                .geocodingTypes("locality")
+                                .language("fa")
                                 .proximity(Point.fromLngLat(53.6830157,32.4207423 ))
                                 .build(PlaceOptions.MODE_CARDS))
                         .build(MainActivity.this);
